@@ -18,8 +18,10 @@ async function getMatchups(client:MongoClient,params:any)
         }
     }
     
-    if(cached_matchup_data[year]){
-        return cached_matchup_data[year];
+    if(cached_matchup_data["league_"+String(LEAGUEID)]){
+        if(cached_matchup_data["league_"+String(LEAGUEID)][year]){
+            return cached_matchup_data["league_"+String(LEAGUEID)][year];
+        }
     }
     
     const database = client.db(dbname);
@@ -31,7 +33,7 @@ async function getMatchups(client:MongoClient,params:any)
 
     let matchups_data:any = await matchups_collection.find(filter_query).toArray();
     
-    cached_matchup_data[year] = matchups_data;
+    cached_matchup_data["league_"+String(LEAGUEID)][year] = matchups_data;
     
     return matchups_data;
 }
