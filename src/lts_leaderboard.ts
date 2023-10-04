@@ -1,3 +1,4 @@
+import { privateEncrypt } from "crypto";
 import { MongoClient } from "mongodb";
 
 let leaderboard_data:any = {};
@@ -22,7 +23,7 @@ async function getLeaderboard(client:MongoClient,params:any){
 
     let leaderboard_data_fetch = await leaderboard_collection.find().toArray();
     let teams_data = await teams_collection.find(teams_filter_query).toArray();
-
+    
     let lb_data = leaderboard_data_fetch[0];
     let keys = Object.keys(leaderboard_data_fetch[0]);
 
@@ -40,12 +41,18 @@ async function getLeaderboard(client:MongoClient,params:any){
     {
         for (let team in teams)
         {
-            if(teams[team]['team_id'] == lb_data[keys[owner]]['team_id']){
+            let team_id = keys[owner];
+
+            team_id = team_id.substring(5);
+            if(teams[team]['team_id'] == team_id){
+                
+                console.log(teams[team].acquisitions, lb_data[keys[owner]].acquisitions);
+                
                 lb_data[keys[owner]]["wins"] = lb_data[keys[owner]]["wins"] + teams[team]['wins']
                 lb_data[keys[owner]]["losses"] = lb_data[keys[owner]]["losses"] + teams[team]['losses']
                 lb_data[keys[owner]]["points_for_alltime"] = lb_data[keys[owner]]["points_for_alltime"] + teams[team]['points_for']
                 lb_data[keys[owner]]["points_against_alltime"] = lb_data[keys[owner]]["points_against_alltime"] + teams[team]['points_against']
-                lb_data[keys[owner]]["aquisitions"] = lb_data[keys[owner]]["aquisitions"] + teams[team]['aquisitions']
+                lb_data[keys[owner]].acquisitions = lb_data[keys[owner]].acquisitions + teams[team].acquisitions
                 lb_data[keys[owner]]["drops"] = lb_data[keys[owner]]["drops"] + teams[team]['drops']
                 lb_data[keys[owner]]["trades"] = lb_data[keys[owner]]["trades"] + teams[team]['trades']
             }
@@ -53,7 +60,7 @@ async function getLeaderboard(client:MongoClient,params:any){
     }
     
     leaderboard_data["league_"+String(LEAGUEID)] = [lb_data];
-
+    console.log(lb_data)
     return [lb_data];
 }
 
