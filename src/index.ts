@@ -1,0 +1,36 @@
+import { Elysia } from "elysia";
+import { cors } from '@elysiajs/cors'
+import getLTS from './lts_dashboard'
+import { MongoClient } from "mongodb";
+import getLeaderboard from './lts_leaderboard';
+import getMatchups from './lts_matchups';
+import getTeams from './lts_teams';
+require('dotenv').config();
+
+const atlasURI = process.env.ATLAS_MONGO_URI;
+
+const PORT = process.env.PORT || 30030;
+
+const LEAGUEID = Number(process.env.LEAGUEID) || 30030;
+
+const client = new MongoClient(atlasURI!);
+console.log("Attempting to connect to Mongo\n")
+
+await client.connect();
+
+console.log("Successfully connected to MongoDB\n")
+
+
+const app = new Elysia()
+  .use(cors())
+  .get("/", () => "Hello LTS")
+  .get("/lts", () => getLTS(client,false,LEAGUEID))
+  .get("/leaderboard", () => getLeaderboard(client,LEAGUEID))
+  .get("/matchups", (params) => getMatchups(client,params.query,LEAGUEID))
+  .get("/getTeams", () => getTeams(client,LEAGUEID))
+  .listen(PORT);
+
+console.log(
+  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
+);
+
