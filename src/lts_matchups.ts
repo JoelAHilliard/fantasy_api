@@ -18,10 +18,13 @@ async function getMatchups(client:MongoClient,params:any)
         }
     }
     
-    if(cached_matchup_data["league_"+String(LEAGUEID)]){
-        if(cached_matchup_data["league_"+String(LEAGUEID)][year]){
-            return cached_matchup_data["league_"+String(LEAGUEID)][year];
+    let leagueKey = "league_" + String(LEAGUEID);
+    if(cached_matchup_data[leagueKey]){
+        if(cached_matchup_data[leagueKey][year]){
+            return cached_matchup_data[leagueKey][year];
         }
+    } else {
+        cached_matchup_data[leagueKey] = {};  // Initialize the object if it doesn’t exist
     }
     
     const database = client.db(dbname);
@@ -33,7 +36,7 @@ async function getMatchups(client:MongoClient,params:any)
 
     let matchups_data:any = await matchups_collection.find(filter_query).toArray();
     
-    cached_matchup_data["league_"+String(LEAGUEID)][year] = matchups_data;
+    cached_matchup_data[leagueKey][year] = matchups_data;  // Now it won’t throw an error
     
     return matchups_data;
 }
