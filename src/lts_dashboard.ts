@@ -1,17 +1,17 @@
 import { MongoClient } from "mongodb";
 
 ///used for caching
-let league_data: any = null;
+let league_data:any = {};
 
-async function getLTS(client:MongoClient,refresh:boolean,LEAGUEID:number)
+async function getLTS(client:MongoClient,refresh:boolean,params:any)
 {
-  if(league_data)
+    const LEAGUEID = Number(params.league_id);
+    if(league_data["league_"+String(LEAGUEID)])
     {
-        return league_data;
+        return league_data["league_"+String(LEAGUEID)];
     }
     let dbname = String(LEAGUEID) + '_fantasy_league'
 
-    console.log(dbname)
     const database = client.db(dbname);
             
     const matchups_collection = database.collection('Matchups');
@@ -49,7 +49,7 @@ async function getLTS(client:MongoClient,refresh:boolean,LEAGUEID:number)
         "perfect_roster": perfect_roster
     }
 
-    league_data = res;
+    league_data["league_"+String(LEAGUEID)] = res;
 
     return res;
 }

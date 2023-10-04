@@ -24,10 +24,10 @@ console.log("Successfully connected to MongoDB\n")
 const app = new Elysia()
   .use(cors())
   .get("/", () => "Hello LTS")
-  .get("/lts", () => getLTS(client,false,LEAGUEID))
-  .get("/leaderboard", () => getLeaderboard(client,LEAGUEID))
-  .get("/matchups", (params) => getMatchups(client,params.query,LEAGUEID))
-  .get("/getTeams", () => getTeams(client,LEAGUEID))
+  .get("/lts", (params) => getLTS(client,false,params.query))
+  .get("/leaderboard", (params) => getLeaderboard(client,params.query))
+  .get("/matchups", (params) => getMatchups(client,params.query))
+  .get("/getTeams", (params) => getTeams(client,params.query))
   .listen(PORT);
 
 console.log(

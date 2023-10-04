@@ -2,8 +2,9 @@ import { MongoClient } from "mongodb";
 
 let cached_draft_data:any = {};
 
-async function getTeams(client:MongoClient,LEAGUEID:number)
+async function getTeams(client:MongoClient,params:any)
 {
+    let LEAGUEID = params.league_id;
     let dbname = String(LEAGUEID) + '_fantasy_league'
     const database = client.db(dbname);
             

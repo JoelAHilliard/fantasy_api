@@ -1,11 +1,13 @@
 import { MongoClient } from "mongodb";
 
-let leaderboard_data:any = null;
+let leaderboard_data:any = {};
 
-async function getLeaderboard(client:MongoClient,LEAGUEID:number){
-    if(leaderboard_data)
+async function getLeaderboard(client:MongoClient,params:any){
+    const LEAGUEID = Number(params.league_id);
+
+    if(leaderboard_data["league_"+String(LEAGUEID)])
     {
-        return leaderboard_data
+        return leaderboard_data["league_"+String(LEAGUEID)]
     }
     let dbname = String(LEAGUEID) + '_fantasy_league'
     const database = client.db(dbname);
@@ -48,7 +50,7 @@ async function getLeaderboard(client:MongoClient,LEAGUEID:number){
         }
     }
     
-    leaderboard_data = [lb_data];
+    leaderboard_data["league_"+String(LEAGUEID)] = [lb_data];
 
     return [lb_data];
 }

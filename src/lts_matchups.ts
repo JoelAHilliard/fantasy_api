@@ -2,9 +2,10 @@ import { MongoClient } from "mongodb";
 
 let cached_matchup_data:any = {};
 
-async function getMatchups(client:MongoClient,params:any,LEAGUEID:number)
+async function getMatchups(client:MongoClient,params:any)
 {
     const year = Number(params.year);
+    const LEAGUEID = Number(params.league_id);
     let dbname = String(LEAGUEID) + '_fantasy_league'
     if(!year)
     {
