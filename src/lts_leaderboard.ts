@@ -4,7 +4,9 @@ let leaderboard_data:any = {};
 
 async function getLeaderboard(client:MongoClient,params:any){
     const LEAGUEID = Number(params.league_id);
-
+    if(Number.isNaN(LEAGUEID)){
+        return {"error":"Must pass League_ID"}
+    }
     if(leaderboard_data["league_"+String(LEAGUEID)])
     {
         return leaderboard_data["league_"+String(LEAGUEID)]

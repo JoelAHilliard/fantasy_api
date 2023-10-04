@@ -6,6 +6,11 @@ let league_data:any = {};
 async function getLTS(client:MongoClient,refresh:boolean,params:any)
 {
     const LEAGUEID = Number(params.league_id);
+
+    if(Number.isNaN(LEAGUEID)){
+        return {"error":"Must pass League_ID"}
+    }
+
     if(league_data["league_"+String(LEAGUEID)])
     {
         return league_data["league_"+String(LEAGUEID)];

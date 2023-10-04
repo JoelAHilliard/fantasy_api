@@ -4,7 +4,11 @@ let cached_draft_data:any = {};
 
 async function getTeams(client:MongoClient,params:any)
 {
-    let LEAGUEID = params.league_id;
+    const LEAGUEID = params.league_id;
+
+    if(Number.isNaN(LEAGUEID)){
+        return {"error":"Must pass League_ID"}
+    }
     let dbname = String(LEAGUEID) + '_fantasy_league'
     const database = client.db(dbname);
             
