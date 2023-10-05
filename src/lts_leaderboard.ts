@@ -76,8 +76,6 @@ async function getLeaderboard(client:MongoClient,params:any){
             team_id = team_id.substring(5);
             if(teams[team]['team_id'] == team_id){
                 
-                console.log(teams[team].acquisitions, lb_data[keys[owner]].acquisitions);
-                
                 lb_data[keys[owner]]["wins"] = lb_data[keys[owner]]["wins"] + teams[team]['wins']
                 lb_data[keys[owner]]["losses"] = lb_data[keys[owner]]["losses"] + teams[team]['losses']
                 lb_data[keys[owner]]["points_for_alltime"] = lb_data[keys[owner]]["points_for_alltime"] + teams[team]['points_for']
@@ -90,7 +88,6 @@ async function getLeaderboard(client:MongoClient,params:any){
     }
     
     leaderboard_data["league_"+String(LEAGUEID)] = [lb_data];
-    console.log(lb_data)
     return [lb_data];
 }
 
