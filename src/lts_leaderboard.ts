@@ -39,7 +39,7 @@ async function getLeaderboard(client:MongoClient,params:any){
             {
                 for(let team in teams_data[item]["teams"]){
                     leaderboard[("team_"+String(teams_data[item]["teams"][team]["team_id"]))] = {
-                        "team_name":teams_data[item]["teams"][team].team_id,
+                        "team_name":teams_data[item]["teams"][team].team_name,
                         "logo_url":teams_data[item]["teams"][team].logo_url,
                         "wins":teams_data[item]["teams"][team].wins,
                         "losses":teams_data[item]["teams"][team].losses,
