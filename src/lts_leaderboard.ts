@@ -1,3 +1,4 @@
+import { listen } from "bun";
 import { privateEncrypt } from "crypto";
 import { MongoClient } from "mongodb";
 
@@ -29,6 +30,35 @@ async function getLeaderboard(client:MongoClient,params:any){
 
     //remove useless "-id"
     keys = keys.slice(1,keys.length);
+
+    if(keys.length == 0){
+        let leaderboard: any = {}
+        for (let item in teams_data)
+        {
+            if(teams_data[item]["year"] == 2023)
+            {
+                for(let team in teams_data[item]["teams"]){
+                    leaderboard[("team_"+String(teams_data[item]["teams"][team]["team_id"]))] = {
+                        "team_name":teams_data[item]["teams"][team].team_id,
+                        "logo_url":teams_data[item]["teams"][team].logo_url,
+                        "wins":teams_data[item]["teams"][team].wins,
+                        "losses":teams_data[item]["teams"][team].losses,
+                        "ties":teams_data[item]["teams"][team].ties,
+                        "points_for_alltime":teams_data[item]["teams"][team].points_for,
+                        "points_against_alltime":teams_data[item]["teams"][team].points_against,
+                        "drops":teams_data[item]["teams"][team].drops,
+                        "acquisitions":teams_data[item]["teams"][team].acquisitions,
+                        "years_played":1
+                    }
+                }
+            }
+        }
+        return [leaderboard];
+    }
+
+
+
+
 
     // var to extract data from cursor
     let teams :any = {}
