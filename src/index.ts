@@ -28,19 +28,19 @@ const app = new Elysia()
     return "Hello LTS";
   })
   .get("/lts", (params) => {
-    printCall("/lts",params);
+    printCall("/lts",params.query);
     getLTS(client, false, params.query);
   })
   .get("/leaderboard", (params) => {
-    printCall("/leaderboard",params);
+    printCall("/leaderboard",params.query);
     return getLeaderboard(client, params.query);
   })
   .get("/matchups", (params) => {
-    printCall("/matchups",params);
+    printCall("/matchups",params.query);
     return getMatchups(client, params.query);
   })
   .get("/getTeams", (params) => {
-    printCall("/getTeams",params);
+    printCall("/getTeams",params.query);
     return getTeams(client, params.query);
   })
   .listen(PORT);
