@@ -1,3 +1,4 @@
+import { privateEncrypt } from "crypto";
 import { MongoClient } from "mongodb";
 
 ///used for caching
@@ -6,10 +7,10 @@ let league_data:any = {};
 async function getLTS(client:MongoClient,refresh:boolean,params:any)
 {
     const LEAGUEID = Number(params.league_id);
-
     if(Number.isNaN(LEAGUEID)){
         return {"error":"Must pass League_ID"}
     }
+    console.log('/lts | league_id:' + params.league_id)
 
     if(league_data["league_"+String(LEAGUEID)])
     {

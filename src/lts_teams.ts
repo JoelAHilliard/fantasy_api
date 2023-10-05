@@ -9,6 +9,7 @@ async function getTeams(client:MongoClient,params:any)
     if(Number.isNaN(LEAGUEID)){
         return {"error":"Must pass League_ID"}
     }
+    console.log('/teams | league_id:' + params.league_id)
 
     if(cached_team_data["league_"+String(LEAGUEID)])
     {

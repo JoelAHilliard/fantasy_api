@@ -9,6 +9,7 @@ async function getMatchups(client:MongoClient,params:any)
     if(Number.isNaN(LEAGUEID)){
         return {"error":"Must pass League_ID"}
     }
+    console.log('/matchups | league_id:' + params.league_id)
 
     let dbname = String(LEAGUEID) + '_fantasy_league'
     if(!year)

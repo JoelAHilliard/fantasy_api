@@ -23,34 +23,14 @@ console.log("Successfully connected to MongoDB\n")
 
 const app = new Elysia()
   .use(cors())
-  .get("/", () => {
-    console.log("Endpoint: /");
-    return "Hello LTS";
-  })
-  .get("/lts", (params) => {
-    printCall("/lts",params.query);
-    getLTS(client, false, params.query);
-  })
-  .get("/leaderboard", (params) => {
-    printCall("/leaderboard",params.query);
-    return getLeaderboard(client, params.query);
-  })
-  .get("/matchups", (params) => {
-    printCall("/matchups",params.query);
-    return getMatchups(client, params.query);
-  })
-  .get("/getTeams", (params) => {
-    printCall("/getTeams",params.query);
-    return getTeams(client, params.query);
-  })
+  .get("/", () => "Hello LTS")
+  .get("/lts", (params) => getLTS(client,false,params.query))
+  .get("/leaderboard", (params) => getLeaderboard(client,params.query))
+  .get("/matchups", (params) => getMatchups(client,params.query))
+  .get("/getTeams", (params) => getTeams(client,params.query))
   .listen(PORT);
-
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
 );
 
-function printCall(endpoint:string,params:any){
-  console.log("Endpoint: " + endpoint);
-  console.log("Params:", params);
-}
