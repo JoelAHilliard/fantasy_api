@@ -26,8 +26,8 @@ async function getLeaderboard(client:MongoClient,params:any){
     let teams_filter_query = {'year':2023};
 
     let leaderboard_data_fetch = await leaderboard_collection.find().toArray();
-    let teams_data = await teams_collection.find(teams_filter_query).toArray();
-    
+    let teams_data  = await teams_collection.find(teams_filter_query).toArray();
+    console.log(teams_data[0])
     let lb_data = leaderboard_data_fetch[0];
     let keys = Object.keys(leaderboard_data_fetch[0]);
 
@@ -51,6 +51,10 @@ async function getLeaderboard(client:MongoClient,params:any){
                         "points_against_alltime":teams_data[item]["teams"][team].points_against,
                         "drops":teams_data[item]["teams"][team].drops,
                         "acquisitions":teams_data[item]["teams"][team].acquisitions,
+                        "playoff_wins":teams_data[item]["teams"][team].playoff_wins,
+                        "playoff_losses":teams_data[item]["teams"][team].playoff_losses,
+                        "championship_wins":teams_data[item]["teams"][team].championship_wins,
+                        "championship_losses":teams_data[item]["teams"][team].championship_losses,
                         "years_played":1
                     }
                 }
@@ -86,6 +90,10 @@ async function getLeaderboard(client:MongoClient,params:any){
                 lb_data[keys[owner]].acquisitions = lb_data[keys[owner]].acquisitions + teams[team].acquisitions
                 lb_data[keys[owner]]["drops"] = lb_data[keys[owner]]["drops"] + teams[team]['drops']
                 lb_data[keys[owner]]["trades"] = lb_data[keys[owner]]["trades"] + teams[team]['trades']
+                lb_data[keys[owner]]["playoff_wins"] = lb_data[keys[owner]]["playoff_wins"] + teams[team]['playoff_wins']
+                lb_data[keys[owner]]["playoff_losses"] = lb_data[keys[owner]]["playoff_losses"] + teams[team]['playoff_losses']
+                lb_data[keys[owner]]["championship_wins"] = lb_data[keys[owner]]["championship_wins"] + teams[team]['championship_wins']
+                lb_data[keys[owner]]["championship_losses"] = lb_data[keys[owner]]["championship_losses"] + teams[team]['championship_losses']
             }
         }
     }
