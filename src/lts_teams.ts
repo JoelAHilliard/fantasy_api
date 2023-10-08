@@ -20,6 +20,30 @@ function rankTeams(teams:any, category:any) {
     }
 }
 
+function rankHistoricalTeams(teams:any, category:any) {
+    // Sort the teams by the category
+    const sortedTeams = teams.sort((a:any, b:any) => {
+        return b["historical_stats"][category] - a["historical_stats"][category]
+    });
+
+    let rank = 1;
+    for(let i = 0; i < sortedTeams.length; i++) {
+        // If the current team is tied with the next one or if it was tied with the previous one
+        if (i < sortedTeams.length - 1 && sortedTeams[i]["historical_stats"][category] === sortedTeams[i + 1]["historical_stats"][category] || 
+            i > 0 && sortedTeams[i]["historical_stats"][category] === sortedTeams[i - 1]["historical_stats"][category]) {
+            sortedTeams[i]["historical_stats"][category + 'Rank'] = "T-" + rank;
+        } else {
+            sortedTeams[i]["historical_stats"][category + 'Rank'] = rank;
+        }
+        
+        // Increment the rank only if the current team is not tied with the next one
+        if (i === sortedTeams.length - 1 || sortedTeams[i]["historical_stats"][category] !== sortedTeams[i + 1]["historical_stats"][category]) {
+            rank++;
+        }
+    }
+}
+
+
 async function getTeams(client:MongoClient,params:any)
 {
     const LEAGUEID = params.league_id;
@@ -51,10 +75,7 @@ async function getTeams(client:MongoClient,params:any)
         "teams":{},
     }
 
-    // console.log(Object.keys(draft_Data[0]['teams'][0]['team_id']))
-    // console.log(draft_Data[0]['teams'][0]['team_id'])
     for(let i = 0;i<team_data.length;i++){
-        // console.log(draft_Data[i])
         for(let j = 0; j < team_data[i]['teams'].length ; j++){
             if(Object.keys(team_res["teams"]).includes("team_"+String(team_data[i]['teams'][j]['team_id'])))
             {
@@ -66,6 +87,7 @@ async function getTeams(client:MongoClient,params:any)
                 tempTeam["trades"] = tempTeam["trades"] + team_data[i]['teams'][j]['trades']
                 tempTeam["acquisitions"] = tempTeam["acquisitions"] + team_data[i]['teams'][j]['acquisitions']
                 tempTeam["points_against"] = tempTeam["points_against"] + team_data[i]['teams'][j]['points_against']
+                tempTeam["points_for"] = tempTeam["points_for"] + team_data[i]['teams'][j]['points_for']
                 tempTeam["ties"] = tempTeam["ties"] + team_data[i]['teams'][j]['ties']
                 tempTeam["championship_wins"] = tempTeam["championship_wins"] + team_data[i]['teams'][j]['championship_wins']
                 tempTeam["losses"] = tempTeam["losses"] + team_data[i]['teams'][j]['losses']
@@ -83,6 +105,7 @@ async function getTeams(client:MongoClient,params:any)
             }
             else{
                 let tempTeam = team_data[i]['teams'][j];
+
                 team_res["teams"]["team_"+String(team_data[i]['teams'][j]['team_id'])] = {
                     "playoff_wins":tempTeam['playoff_wins'],
                     "playoff_losses":tempTeam['playoff_losses'],
@@ -90,6 +113,7 @@ async function getTeams(client:MongoClient,params:any)
                     "drops":tempTeam['wins'],
                     "acquisitions":tempTeam['acquisitions'],
                     "points_against":tempTeam['points_against'],
+                    "points_for":tempTeam['points_against'],
                     "ties":tempTeam['ties'],
                     "losses":tempTeam['losses'],
                     "wins":tempTeam['wins'],
@@ -123,8 +147,7 @@ async function getTeams(client:MongoClient,params:any)
     }
 
     let categories = Object.keys(curr_teams[0]);
-
-   
+    let historical_categories = Object.keys(curr_teams[0]["historical_stats"]);
 
     categories.forEach(category=>{
         if(category === "streak_type"
@@ -140,6 +163,22 @@ async function getTeams(client:MongoClient,params:any)
         || category === "logo_url"
         || category === "final_standing"){}
         else{rankTeams(curr_teams,category)}
+    })
+
+    historical_categories.forEach(category=>{
+        if(category === "streak_type"
+        || category === "streak_length"
+        || category === "owner"
+        || category === "team_id"
+        || category === "team_name"
+        || category === "division_id"
+        || category === "division_name"
+        || category === "team_abbrev"
+        || category === "roster"
+        || category === "historical_stats"
+        || category === "team_logo"
+        || category === "final_standing"){}
+        else{rankHistoricalTeams(curr_teams,category)}
     })
 
     cached_team_data["league_"+ String(LEAGUEID)] = curr_teams
