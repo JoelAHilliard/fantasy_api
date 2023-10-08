@@ -16,9 +16,13 @@ function rankTeams(teams:any, category:any) {
             sortedTeams[i][category + 'Rank'] = rank;
         }
 
-        rank++;
+        // Increment the rank only if the current team is not tied with the next one
+        if (i === sortedTeams.length - 1 || sortedTeams[i][category] !== sortedTeams[i + 1][category]) {
+            rank++;
+        }
     }
 }
+
 
 function rankHistoricalTeams(teams:any, category:any) {
     // Sort the teams by the category
