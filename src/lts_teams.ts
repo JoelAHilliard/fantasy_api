@@ -117,18 +117,22 @@ async function getTeams(client:MongoClient,params:any)
                     "drops":tempTeam['wins'],
                     "acquisitions":tempTeam['acquisitions'],
                     "points_against":tempTeam['points_against'],
-                    "points_for":tempTeam['points_against'],
+                    "points_for":tempTeam['points_for'],
                     "ties":tempTeam['ties'],
                     "losses":tempTeam['losses'],
                     "wins":tempTeam['wins'],
                     "championship_wins":tempTeam['championship_wins'],
                     "championship_losses":tempTeam['championship_losses'],
                 }
-                if(tempTeam['playoff_wins'] > 0 || tempTeam["playoff_losses"] > 0){
-                    team_res["teams"]["team_"+String(team_data[i]['teams'][j]['team_id'])]["playoff_appearances"] = 1
+
+                if(tempTeam['playoff_wins'] > 0 || tempTeam["playoff_losses"] > 0)
+                {
+                    team_res["teams"]["team_" + String(team_data[i]['teams'][j]['team_id'])]["playoff_appearances"] = 1
                 }
-                else{
-                    team_res["teams"]["team_"+String(team_data[i]['teams'][j]['team_id'])]["playoff_appearances"] = 0
+
+                else
+                {
+                    team_res["teams"]["team_" + String(team_data[i]['teams'][j]['team_id'])]["playoff_appearances"] = 0
                 }
             }
         }
