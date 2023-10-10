@@ -163,7 +163,6 @@ async function getTeams(client:MongoClient,params:any)
     }
 
     let categories = Object.keys(curr_teams[0]);
-    let historical_categories = Object.keys(curr_teams[0]["historical_stats"]);
 
     categories.forEach(category=>{
         if(category === "streak_type"
@@ -181,21 +180,28 @@ async function getTeams(client:MongoClient,params:any)
         else{rankTeams(curr_teams,category)}
     })
 
-    historical_categories.forEach(category=>{
-        if(category === "streak_type"
-        || category === "streak_length"
-        || category === "owner"
-        || category === "team_id"
-        || category === "team_name"
-        || category === "division_id"
-        || category === "division_name"
-        || category === "team_abbrev"
-        || category === "roster"
-        || category === "historical_stats"
-        || category === "team_logo"
-        || category === "final_standing"){}
-        else{rankHistoricalTeams(curr_teams,category)}
-    })
+    try{
+        let historical_categories = Object.keys(curr_teams[0]["historical_stats"]);
+
+        historical_categories.forEach(category=>{
+            if(category === "streak_type"
+            || category === "streak_length"
+            || category === "owner"
+            || category === "team_id"
+            || category === "team_name"
+            || category === "division_id"
+            || category === "division_name"
+            || category === "team_abbrev"
+            || category === "roster"
+            || category === "historical_stats"
+            || category === "team_logo"
+            || category === "final_standing"){}
+            else{rankHistoricalTeams(curr_teams,category)}
+        })
+    }
+    catch{
+
+    }
 
     cached_team_data["league_"+ String(LEAGUEID)] = curr_teams
     
