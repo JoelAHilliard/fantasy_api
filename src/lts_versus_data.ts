@@ -4,16 +4,20 @@ let cached_versus_data: any = {};
 
 async function getVersusData(client: MongoClient, params: any) {
 
+
+
     const LEAGUEID = Number(params.league_id);
 
     const myTeamId = Number(params.my_team_id);
 
     const challengerId = Number(params.challenger_id);
 
-    if (Number.isNaN(LEAGUEID)) {
-        return { "error": "Must pass League_ID" }
+    if (Number.isNaN(LEAGUEID) || Number.isNaN(myTeamId) || Number.isNaN(challengerId)) {
+        return { "error": "Missing parameters" }
     }
+
     console.log('/versusData | league_id:' + params.league_id)
+
 
     let dbname = String(LEAGUEID) + '_fantasy_league'
 
@@ -22,7 +26,6 @@ async function getVersusData(client: MongoClient, params: any) {
             "error": "No year provided"
         }
     }
-
 
     const database = client.db(dbname);
 
@@ -37,8 +40,6 @@ async function getVersusData(client: MongoClient, params: any) {
     };
 
     let matchups_data: any = await matchups_collection.find(filter_query).toArray();
-
-    cached_versus_data[LEAGUEID][String(myTeamId) + '_team'][String(challengerId) + '_team'] = matchups_data;
 
     return matchups_data;
 }
