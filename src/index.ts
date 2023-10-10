@@ -5,6 +5,7 @@ import { MongoClient } from "mongodb";
 import getLeaderboard from './lts_leaderboard';
 import getMatchups from './lts_matchups';
 import getTeams from './lts_teams';
+import getVersusData from "./lts_versus_data";
 require('dotenv').config();
 
 const atlasURI = process.env.ATLAS_MONGO_URI;
@@ -28,6 +29,7 @@ const app = new Elysia()
   .get("/leaderboard", (params) => getLeaderboard(client,params.query))
   .get("/matchups", (params) => getMatchups(client,params.query))
   .get("/getTeams", (params) => getTeams(client,params.query))
+  .get("/getVersusData", (params) => getVersusData(client,params.query))
   .listen(PORT);
 
 console.log(
