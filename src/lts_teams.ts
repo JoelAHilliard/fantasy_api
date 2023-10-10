@@ -86,19 +86,27 @@ async function getTeams(client:MongoClient,params:any)
                 let tempTeam = team_res["teams"]["team_"+String(team_data[i]['teams'][j]['team_id'])];
                 
                 tempTeam["wins"] = tempTeam["wins"] + team_data[i]['teams'][j]['wins']
-                tempTeam["playoff_wins"] = tempTeam["playoff_wins"] + team_data[i]['teams'][j]['playoff_wins']
-                tempTeam["playoff_losses"] = tempTeam["playoff_losses"] + team_data[i]['teams'][j]['playoff_losses']
                 tempTeam["trades"] = tempTeam["trades"] + team_data[i]['teams'][j]['trades']
                 tempTeam["acquisitions"] = tempTeam["acquisitions"] + team_data[i]['teams'][j]['acquisitions']
                 tempTeam["points_against"] = tempTeam["points_against"] + team_data[i]['teams'][j]['points_against']
                 tempTeam["points_for"] = tempTeam["points_for"] + team_data[i]['teams'][j]['points_for']
                 tempTeam["ties"] = tempTeam["ties"] + team_data[i]['teams'][j]['ties']
-                tempTeam["championship_wins"] = tempTeam["championship_wins"] + team_data[i]['teams'][j]['championship_wins']
                 tempTeam["losses"] = tempTeam["losses"] + team_data[i]['teams'][j]['losses']
-                tempTeam["championship_losses"] = tempTeam["championship_losses"] + team_data[i]['teams'][j]['championship_losses']
                 tempTeam["team_name"] = team_data[i]['teams'][j]['team_name']
                 tempTeam["team_logo"] = team_data[i]['teams'][j]['logo_url']
                 tempTeam["team_id"] = team_data[i]['teams'][j]['team_id']
+                
+
+                //test if undefinde as this included 2023 playoff team data which doesnt ecists
+                if(team_data[i]['teams'][j]['playoff_wins'] !== undefined)
+                {
+
+                    tempTeam["playoff_wins"] = tempTeam["playoff_wins"] + team_data[i]['teams'][j]['playoff_wins']
+                    tempTeam["playoff_losses"] = tempTeam["playoff_losses"] + team_data[i]['teams'][j]['playoff_losses']
+                    tempTeam["championship_losses"] = tempTeam["championship_losses"] + team_data[i]['teams'][j]['championship_losses']
+                    tempTeam["championship_wins"] = tempTeam["championship_wins"] + team_data[i]['teams'][j]['championship_wins']
+                
+                }
 
                 if(team_data[i]['teams'][j]['playoff_losses'] > 0 || team_data[i]['teams'][j]['playoff_wins'] > 0){
                    tempTeam["playoff_appearances"] = tempTeam["playoff_appearances"] + 1
