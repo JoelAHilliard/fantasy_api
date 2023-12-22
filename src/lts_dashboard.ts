@@ -24,7 +24,7 @@ async function getLTS(client:MongoClient,refresh:boolean,params:any)
     
     const teams_collection = database.collection('Teams');
 
-    let filter_query = {'year':2023,'week':13};
+    let filter_query = {'year':2023,'week':16};
     let teams_filter_query = {'year':2023};
 
     let matchups_data:any = await matchups_collection.find(filter_query).toArray();
