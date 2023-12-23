@@ -23,7 +23,7 @@ async function getLeaderboard(client:MongoClient,params:any){
     
     const teams_collection = database.collection('Teams');
 
-    let teams_filter_query = {'year':2023};
+    let teams_filter_query = {'year': 2023};
 
     let leaderboard_data_fetch = await leaderboard_collection.find().toArray();
     let teams_data  = await teams_collection.find(teams_filter_query).toArray();
@@ -88,6 +88,8 @@ async function getLeaderboard(client:MongoClient,params:any){
 
             if(teams[team]['team_id'] == team_id){
                 lb_data[keys[owner]]["wins"] = lb_data[keys[owner]]["wins"] + teams[team]['wins']
+                lb_data[keys[owner]]["playoff_wins"] = lb_data[keys[owner]]["playoff_wins"] + teams[team]['playoff_wins']
+                lb_data[keys[owner]]["playoff_losses"] = lb_data[keys[owner]]["playoff_losses"] + teams[team]['playoff_losses']
                 lb_data[keys[owner]]["losses"] = lb_data[keys[owner]]["losses"] + teams[team]['losses']
                 lb_data[keys[owner]]["points_for_alltime"] = lb_data[keys[owner]]["points_for_alltime"] + teams[team]['points_for']
                 lb_data[keys[owner]]["points_against_alltime"] = lb_data[keys[owner]]["points_against_alltime"] + teams[team]['points_against']
