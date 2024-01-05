@@ -7,16 +7,20 @@ let league_data:any = {};
 async function getLTS(client:MongoClient,refresh:boolean,params:any)
 {
     const LEAGUEID = Number(params.league_id);
+    let WEEK = Number(params.week);
     if(Number.isNaN(LEAGUEID)){
         return {"error":"Must pass League_ID"}
     }
+    if(Number.isNaN(WEEK)){
+        WEEK = 17
+    }
     console.log('/lts | league_id:' + params.league_id)
 
-    if(league_data["league_"+String(LEAGUEID)])
+    if(league_data["league_"+String(LEAGUEID)+"_"+String(WEEK)])
     {
-        return league_data["league_"+String(LEAGUEID)];
+        return league_data["league_"+String(LEAGUEID)+"_"+String(WEEK)];
     }
-    let dbname = String(LEAGUEID) + '_fantasy_league'
+    let dbname = String(LEAGUEID) + '_fantasy_league_test'
 
     const database = client.db(dbname);
             
@@ -24,16 +28,30 @@ async function getLTS(client:MongoClient,refresh:boolean,params:any)
     
     const teams_collection = database.collection('Teams');
 
-    let filter_query = {'year':2023,'week':15};
-    let teams_filter_query = {'year':2023};
+    const league_info = database.collection('Info');
+
+    const league_info_data = await league_info.find().toArray();
+
+    let current_week = league_info_data[0].currentWeek;
+    let year = league_info_data[0].year;
+
+    if(Number.isNaN(WEEK)){
+        WEEK = current_week
+    }
+
+    let filter_query = {'year':year,'week':WEEK};
+
+    let teams_filter_query = { "yearly_stats.2023": { $exists: true } }
 
     let matchups_data:any = await matchups_collection.find(filter_query).toArray();
-    let teams_data:any = await teams_collection.find(teams_filter_query).toArray();
-
+    
     let matchups: any = [];
-    let misc_data: any = {};
-    let perfect_roster: any = {};
-    let power_rankings: any = [];
+
+    let standings: any = league_info_data[0].standings
+    
+    let power_rankings: any = league_info_data[0].pwrRankings
+    //left off here
+    let perfect_roster = league_info_data[0].top_roster;
 
     for (let item in matchups_data)
     {
@@ -41,21 +59,24 @@ async function getLTS(client:MongoClient,refresh:boolean,params:any)
         matchups.push(matchups_data[item]);
     }
 
-    for(let item in teams_data)
-    {
-        power_rankings.push(teams_data[item]['power_rankings'])
-        misc_data = teams_data[item]['misc_data']
-        perfect_roster = teams_data[item]['perfect_roster']
-    }
+
+    delete league_info_data[0].standings
+    delete league_info_data[0].pwrRankings
+    delete league_info_data[0].top_roster
+
+    perfect_roster["FLEX"] = [perfect_roster["FLEX"]]
 
     const res = {
         "matchups": matchups,
         "power_rankings": power_rankings,
-        "misc_data": misc_data,
-        "perfect_roster": perfect_roster
+        "standings": standings,
+        "perfect_roster": perfect_roster,
+        "info":{
+            "currentWeek":league_info_data[0].currentWeek
+        }
     }
 
-    league_data["league_"+String(LEAGUEID)] = res;
+    league_data["league_"+String(LEAGUEID)+"_"+String(WEEK)] = res;
 
     return res;
 }

@@ -63,21 +63,35 @@ async function getTeams(client:MongoClient,params:any)
         return cached_team_data["league_"+String(LEAGUEID)]
     }
     
-    let dbname = String(LEAGUEID) + '_fantasy_league'
+    let dbname = String(LEAGUEID) + '_fantasy_league_test'
 
     const database = client.db(dbname);
             
     const teams_collection = database.collection('Teams');
 
+    const info_collection = database.collection('Info');
+
+    let year = await info_collection.find({"year":1})
+
     //add weekly filter later
 
-    let team_data:any = await teams_collection.find().toArray();
+    let team_data = await teams_collection.find(
+        {}, // This is your filter. Empty means no filter, or you can specify conditions here.
+        {
+            projection: {
+                alltime_stats: 1, 
+                [`yearly_stats.${2023}`]: 1 
+            }
+        }
+    ).toArray();
 
 
     // each team has current year data and historical summed data
     let team_res:any = {
         "teams":{},
     }
+
+    return team_data
 
     for(let i = 0;i<team_data.length;i++){
         for(let j = 0; j < team_data[i]['teams'].length ; j++){

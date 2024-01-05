@@ -12,9 +12,8 @@ const atlasURI = process.env.ATLAS_MONGO_URI;
 
 const PORT = process.env.PORT || 30030;
 
-const LEAGUEID = Number(process.env.LEAGUEID) || 30030;
-
 const client = new MongoClient(atlasURI!);
+
 console.log("Attempting to connect to Mongo\n")
 
 await client.connect();
