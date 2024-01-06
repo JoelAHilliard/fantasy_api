@@ -145,8 +145,6 @@ async function getLTS(client:MongoClient,refresh:boolean,params:any)
 
     let filter_query = {'year':year,'week':WEEK};
 
-    let teams_filter_query = { "yearly_stats.2023": { $exists: true } }
-
     let matchups_data:any = await matchups_collection.find(filter_query).toArray();
     
     let matchups: any = [];
@@ -177,7 +175,7 @@ async function getLTS(client:MongoClient,refresh:boolean,params:any)
         "standings": standings,
         "perfect_roster": perfect_roster,
         "info":{
-            "currentWeek":league_info_data[0].currentWeek
+            "currentWeek": league_info_data[0].currentWeek
         }
     }
 
