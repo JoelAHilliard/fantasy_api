@@ -152,6 +152,7 @@ async function getLTS(client:MongoClient,refresh:boolean,params:any)
     let standings: any = league_info_data[0].standings;
     
     let power_rankings: any = league_info_data[0].pwrRankings;
+    let prevSeasons: any = league_info_data[0].prevSeasons;
     
     //left off here - generate perf roster here
     let perfect_roster = generateBestRoster(matchups_data);
@@ -168,12 +169,12 @@ async function getLTS(client:MongoClient,refresh:boolean,params:any)
     delete league_info_data[0].top_roster
 
     // perfect_roster["FLEX"] = [perfect_roster["FLEX"]]
-
     const res = {
         "matchups": matchups,
         "power_rankings": power_rankings,
         "standings": standings,
         "perfect_roster": perfect_roster,
+        "prevSeasons": prevSeasons,
         "info":{
             "currentWeek": league_info_data[0].currentWeek
         }

@@ -51,16 +51,17 @@ function rankHistoricalTeams(teams:any, category:any) {
 async function getTeams(client:MongoClient,params:any)
 {
     const LEAGUEID = params.league_id;
-
+    const YEAR = params.year;
+    console.log(params)
     if(Number.isNaN(LEAGUEID)){
         return {"error":"Must pass League_ID"}
     }
 
     console.log('/teams | league_id:' + params.league_id)
 
-    if(cached_team_data["league_"+String(LEAGUEID)])
+    if(cached_team_data["league_"+String(LEAGUEID)+String(YEAR)])
     {
-        return cached_team_data["league_"+String(LEAGUEID)]
+        return cached_team_data["league_"+String(LEAGUEID)+String(YEAR)]
     }
     
     let dbname = String(LEAGUEID) + '_fantasy_league_test'
@@ -71,8 +72,6 @@ async function getTeams(client:MongoClient,params:any)
 
     const info_collection = database.collection('Info');
 
-    let year = await info_collection.find({"year":1})
-
     //add weekly filter later
 
     let team_data = await teams_collection.find(
@@ -80,146 +79,14 @@ async function getTeams(client:MongoClient,params:any)
         {
             projection: {
                 alltime_stats: 1, 
-                [`yearly_stats.${2023}`]: 1 
+                [`yearly_stats.${YEAR}`]: 1 
             }
         }
     ).toArray();
 
-
-    // each team has current year data and historical summed data
-    let team_res:any = {
-        "teams":{},
-    }
-
+    console.log(team_data,YEAR)
     return team_data
 
-    for(let i = 0;i<team_data.length;i++){
-        for(let j = 0; j < team_data[i]['teams'].length ; j++){
-            if(Object.keys(team_res["teams"]).includes("team_"+String(team_data[i]['teams'][j]['team_id'])))
-            {
-                let tempTeam = team_res["teams"]["team_"+String(team_data[i]['teams'][j]['team_id'])];
-                
-                tempTeam["wins"] = tempTeam["wins"] + team_data[i]['teams'][j]['wins']
-                tempTeam["trades"] = tempTeam["trades"] + team_data[i]['teams'][j]['trades']
-                tempTeam["acquisitions"] = tempTeam["acquisitions"] + team_data[i]['teams'][j]['acquisitions']
-                tempTeam["points_against"] = tempTeam["points_against"] + team_data[i]['teams'][j]['points_against']
-                tempTeam["points_for"] = tempTeam["points_for"] + team_data[i]['teams'][j]['points_for']
-                tempTeam["ties"] = tempTeam["ties"] + team_data[i]['teams'][j]['ties']
-                tempTeam["losses"] = tempTeam["losses"] + team_data[i]['teams'][j]['losses']
-                tempTeam["team_name"] = team_data[i]['teams'][j]['team_name']
-                tempTeam["team_logo"] = team_data[i]['teams'][j]['logo_url']
-                tempTeam["team_id"] = team_data[i]['teams'][j]['team_id']
-                
-
-                //test if undefinde as this included 2023 playoff team data which doesnt ecists
-                if(team_data[i]['teams'][j]['playoff_wins'] !== undefined)
-                {
-
-                    tempTeam["playoff_wins"] = tempTeam["playoff_wins"] + team_data[i]['teams'][j]['playoff_wins']
-                    tempTeam["playoff_losses"] = tempTeam["playoff_losses"] + team_data[i]['teams'][j]['playoff_losses']
-                    tempTeam["championship_losses"] = tempTeam["championship_losses"] + team_data[i]['teams'][j]['championship_losses']
-                    tempTeam["championship_wins"] = tempTeam["championship_wins"] + team_data[i]['teams'][j]['championship_wins']
-                
-                }
-
-                if(team_data[i]['teams'][j]['playoff_losses'] > 0 || team_data[i]['teams'][j]['playoff_wins'] > 0){
-                   tempTeam["playoff_appearances"] = tempTeam["playoff_appearances"] + 1
-                }
-
-                team_res["teams"]["team_"+String(team_data[i]['teams'][j]['team_id'])] = tempTeam;
-                
-            }
-            else{
-                let tempTeam = team_data[i]['teams'][j];
-
-                team_res["teams"]["team_"+String(team_data[i]['teams'][j]['team_id'])] = {
-                    "playoff_wins":tempTeam['playoff_wins'],
-                    "playoff_losses":tempTeam['playoff_losses'],
-                    "trades":tempTeam['trades'],
-                    "drops":tempTeam['wins'],
-                    "acquisitions":tempTeam['acquisitions'],
-                    "points_against":tempTeam['points_against'],
-                    "points_for":tempTeam['points_for'],
-                    "ties":tempTeam['ties'],
-                    "losses":tempTeam['losses'],
-                    "wins":tempTeam['wins'],
-                    "championship_wins":tempTeam['championship_wins'],
-                    "championship_losses":tempTeam['championship_losses'],
-                }
-
-                if(tempTeam['playoff_wins'] > 0 || tempTeam["playoff_losses"] > 0)
-                {
-                    team_res["teams"]["team_" + String(team_data[i]['teams'][j]['team_id'])]["playoff_appearances"] = 1
-                }
-
-                else
-                {
-                    team_res["teams"]["team_" + String(team_data[i]['teams'][j]['team_id'])]["playoff_appearances"] = 0
-                }
-            }
-        }
-    }
-
-
-    let curr_teams = team_data[team_data.length-1]['teams'];
-
-    for(let i = 0; i < curr_teams.length;i++)
-    {
-        let team_names = Object.keys(team_res["teams"]) 
-        
-        for(let j = 0; j < team_names.length; j++)
-        {
-            if(team_res["teams"][team_names[j]]["team_id"] == curr_teams[i]["team_id"])
-            {
-                curr_teams[i]["historical_stats"] = team_res["teams"][team_names[j]]
-            }
-        }
-    }
-
-    let categories = Object.keys(curr_teams[0]);
-
-    categories.forEach(category=>{
-        if(category === "streak_type"
-        || category === "streak_length"
-        || category === "owner"
-        || category === "team_id"
-        || category === "team_name"
-        || category === "division_id"
-        || category === "division_name"
-        || category === "team_abbrev"
-        || category === "roster"
-        || category === "historical_stats"
-        || category === "logo_url"
-        || category === "final_standing"){}
-        else{rankTeams(curr_teams,category)}
-    })
-
-    try{
-        let historical_categories = Object.keys(curr_teams[0]["historical_stats"]);
-
-        historical_categories.forEach(category=>{
-            if(category === "streak_type"
-            || category === "streak_length"
-            || category === "owner"
-            || category === "team_id"
-            || category === "team_name"
-            || category === "division_id"
-            || category === "division_name"
-            || category === "team_abbrev"
-            || category === "roster"
-            || category === "historical_stats"
-            || category === "team_logo"
-            || category === "final_standing"){}
-            else{rankHistoricalTeams(curr_teams,category)}
-        })
-    }
-    catch{
-
-    }
-
-    cached_team_data["league_"+ String(LEAGUEID)] = curr_teams
-    
-    return curr_teams;
 }
 
 export default getTeams;
