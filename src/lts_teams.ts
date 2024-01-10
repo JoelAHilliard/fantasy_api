@@ -52,7 +52,6 @@ async function getTeams(client:MongoClient,params:any)
 {
     const LEAGUEID = params.league_id;
     const YEAR = params.year;
-    console.log(params)
     if(Number.isNaN(LEAGUEID)){
         return {"error":"Must pass League_ID"}
     }
@@ -84,7 +83,6 @@ async function getTeams(client:MongoClient,params:any)
         }
     ).toArray();
 
-    console.log(team_data,YEAR)
     return team_data
 
 }
