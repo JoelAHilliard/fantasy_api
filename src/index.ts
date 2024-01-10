@@ -6,12 +6,12 @@ import getLeaderboard from './lts_leaderboard';
 import getMatchups from './lts_matchups';
 import getTeams from './lts_teams';
 import getVersusData from "./lts_versus_data";
-const io = require('@pm2/io')
+// const io = require('@pm2/io')
 
-io.init({
-  transactions: true, // will enable the transaction tracing
-  http: true // will enable metrics about the http server (optional)
-})
+// io.init({
+//   transactions: true, // will enable the transaction tracing
+//   http: true // will enable metrics about the http server (optional)
+// })
 
 require('dotenv').config();
 
