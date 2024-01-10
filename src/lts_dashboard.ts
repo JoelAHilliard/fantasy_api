@@ -124,7 +124,7 @@ async function getLTS(client:MongoClient,refresh:boolean,params:any)
     {
         return league_data["league_"+String(LEAGUEID)+"_"+String(WEEK)];
     }
-    let dbname = String(LEAGUEID) + '_fantasy_league_test'
+    let dbname = String(LEAGUEID) + '_fantasy_league_prod'
 
     const database = client.db(dbname);
             

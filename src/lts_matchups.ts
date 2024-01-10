@@ -11,7 +11,7 @@ async function getMatchups(client:MongoClient,params:any)
     }
     console.log('/matchups | league_id:' + params.league_id)
 
-    let dbname = String(LEAGUEID) + '_fantasy_league_test'
+    let dbname = String(LEAGUEID) + '_fantasy_league_prod'
     if(!year)
     {
         return{

@@ -16,7 +16,7 @@ async function getLeaderboard(client:MongoClient,params:any){
     {
         return leaderboard_data["league_"+String(LEAGUEID)]
     }
-    let dbname = String(LEAGUEID) + '_fantasy_league_test'
+    let dbname = String(LEAGUEID) + '_fantasy_league_prod'
     const database = client.db(dbname);
             
     const teams_collection = database.collection('Teams');
