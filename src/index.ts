@@ -6,11 +6,12 @@ import getLeaderboard from './lts_leaderboard';
 import getMatchups from './lts_matchups';
 import getTeams from './lts_teams';
 import getVersusData from "./lts_versus_data";
+
 require('dotenv').config();
 
 const atlasURI = process.env.ATLAS_MONGO_URI;
 
-const PORT = process.env.PORT || 30030;
+const PORT = 3000;
 
 const client = new MongoClient(atlasURI!);
 
