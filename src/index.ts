@@ -6,6 +6,7 @@ import getLeaderboard from './lts_leaderboard';
 import getMatchups from './lts_matchups';
 import getTeams from './lts_teams';
 import getVersusData from "./lts_versus_data";
+import getInfo from './lts_info';
 // const io = require('@pm2/io')
 
 // io.init({
@@ -32,6 +33,7 @@ const app = new Elysia()
   .use(cors())
   .get("/", () => "Hello LTS")
   .get("/lts", (params) => getLTS(client,false,params.query))
+  .get("/info", (params) => getInfo(client,params.query))
   .get("/leaderboard", (params) => getLeaderboard(client,params.query))
   .get("/matchups", (params) => getMatchups(client,params.query))
   .get("/getTeams", (params) => getTeams(client,params.query))
