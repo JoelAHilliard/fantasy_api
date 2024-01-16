@@ -176,7 +176,7 @@ async function getLTS(client:MongoClient,refresh:boolean,params:any)
         "perfect_roster": perfect_roster,
         "prevSeasons": prevSeasons,
         "info":{
-            "currentWeek": league_info_data[0].currentWeek
+            "currentWeek": league_info_data[0].lastWeek
         }
     }
 
