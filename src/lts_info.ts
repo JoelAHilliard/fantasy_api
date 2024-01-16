@@ -26,7 +26,7 @@ async function getInfo(client:MongoClient,params:any)
             
     const matchups_collection = database.collection('Info');
 
-    let projection = { projection: { prevSeasons: 1,  lastWeek: 1} };
+    let projection = { projection: { prevSeasons: 1,  lastWeek: 1} }; 
     
     let info_data:any = await matchups_collection.find({}, projection).toArray();
     
