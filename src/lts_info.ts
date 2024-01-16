@@ -30,6 +30,8 @@ async function getInfo(client:MongoClient,params:any)
     
     let info_data:any = await matchups_collection.find({}, projection).toArray();
     
+    info_data[0]['prevSeasons'].push(2023);
+
     cached_matchup_data[leagueKey] = info_data;  // Now it won’t throw an error
     
     return info_data;
