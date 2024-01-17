@@ -31,17 +31,24 @@ async function getVersusData(client: MongoClient, params: any) {
 
     const matchups_collection = database.collection('Matchups');
 
-    //add weekly filter later
     let filter_query = {
         $or: [
             { 'away_team_id': myTeamId, 'home_team_id': challengerId },
-            { 'home_team_id': myTeamId, 'away_team_id': challengerId },
+            { 'home_team_id': myTeamId, 'away_team_id': challengerId }
         ]
     };
 
-    let matchups_data: any = await matchups_collection.find(filter_query).toArray();
-
+    //remove lineups
+    
+    let projection = {
+        'away_team_lineup': 0,
+        'home_team_lineup': 0 
+    };
+    
+    let matchups_data = await matchups_collection.find(filter_query, { projection: projection }).toArray();
+    
     return matchups_data;
+    
 }
 
 export default getVersusData;
