@@ -1,8 +1,8 @@
 import { MongoClient } from "mongodb";
 
-let cached_matchup_data:any = {};
+let cached_matchup_data = {};
 
-async function getMatchups(client:MongoClient,params:any)
+async function getMatchups(client,params)
 {
     const year = Number(params.year);
     const LEAGUEID = Number(params.league_id);
@@ -35,7 +35,7 @@ async function getMatchups(client:MongoClient,params:any)
     //add weekly filter later
     let filter_query = {'year':year};
 
-    let matchups_data:any = await matchups_collection.find(filter_query).toArray();
+    let matchups_data = await matchups_collection.find(filter_query).toArray();
     
     cached_matchup_data[leagueKey][year] = matchups_data;  // Now it won’t throw an error
     

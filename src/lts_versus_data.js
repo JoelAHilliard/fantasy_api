@@ -1,8 +1,8 @@
 import { MongoClient } from "mongodb";
 
-let cached_versus_data: any = {};
+let cached_versus_data = {};
 
-async function getVersusData(client: MongoClient, params: any) {
+async function getVersusData(client, params) {
 
 
 

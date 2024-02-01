@@ -1,10 +1,7 @@
-import { listen } from "bun";
-import { privateEncrypt } from "crypto";
-import { MongoClient } from "mongodb";
 
-let leaderboard_data:any = {};
+let leaderboard_data = {};
 
-async function getLeaderboard(client:MongoClient,params:any){
+async function getLeaderboard(client,params){
     const LEAGUEID = Number(params.league_id);
     if(Number.isNaN(LEAGUEID)){
         return {"error":"Must pass League_ID"}

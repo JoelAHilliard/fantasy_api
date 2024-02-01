@@ -1,9 +1,9 @@
 import { MongoClient } from "mongodb";
 
 ///used for caching
-let league_data:any = {};
+let league_data = {};
 //ts-nocheck
-function generateBestRoster(boxScores:any) {
+function generateBestRoster(boxScores) {
     const perfectRoster = {
         "QB": [],
         "RB": [],
@@ -104,7 +104,7 @@ function generateBestRoster(boxScores:any) {
 
 
 
-async function getLTS(client:MongoClient,refresh:boolean,params:any)
+export async function getLTS(client,refresh,params)
 {
     const LEAGUEID = Number(params.league_id);
     
@@ -145,14 +145,14 @@ async function getLTS(client:MongoClient,refresh:boolean,params:any)
 
     let filter_query = {'year':year,'week':WEEK};
 
-    let matchups_data:any = await matchups_collection.find(filter_query).toArray();
+    let matchups_data = await matchups_collection.find(filter_query).toArray();
     
-    let matchups: any = [];
+    let matchups = [];
 
-    let standings: any = league_info_data[0].standings;
+    let standings = league_info_data[0].standings;
     
-    let power_rankings: any = league_info_data[0].pwrRankings;
-    let prevSeasons: any = league_info_data[0].prevSeasons;
+    let power_rankings = league_info_data[0].pwrRankings;
+    let prevSeasons = league_info_data[0].prevSeasons;
     
     //left off here - generate perf roster here
     let perfect_roster = generateBestRoster(matchups_data);

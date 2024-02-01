@@ -1,10 +1,10 @@
 import { MongoClient } from "mongodb";
 
-let cached_team_data:any = {};
+let cached_team_data = {};
 
-function rankTeams(teams:any, category:any) {
+function rankTeams(teams, category) {
     // Sort the teams by the category
-    const sortedTeams = teams.slice().sort((a:any, b:any) => b[category] - a[category]);
+    const sortedTeams = teams.slice().sort((a, b) => b[category] - a[category]);
 
     let rank = 1;
     for(let i = 0; i < sortedTeams.length; i++) {
@@ -24,9 +24,9 @@ function rankTeams(teams:any, category:any) {
 }
 
 
-function rankHistoricalTeams(teams:any, category:any) {
+function rankHistoricalTeams(teams, category) {
     // Sort the teams by the category
-    const sortedTeams = teams.sort((a:any, b:any) => {
+    const sortedTeams = teams.sort((a, b) => {
         return b["historical_stats"][category] - a["historical_stats"][category]
     });
 
@@ -48,7 +48,7 @@ function rankHistoricalTeams(teams:any, category:any) {
 }
 
 
-async function getTeams(client:MongoClient,params:any)
+async function getTeams(client,params)
 {
     const LEAGUEID = params.league_id;
     const YEAR = params.year;

@@ -1,8 +1,8 @@
 import { MongoClient } from "mongodb";
 
-let cached_matchup_data:any = {};
+let cached_matchup_data = {};
 
-async function getInfo(client:MongoClient,params:any)
+async function getInfo(client,params)
 {
     const LEAGUEID = Number(params.league_id);
     if(Number.isNaN(LEAGUEID)){
@@ -28,7 +28,7 @@ async function getInfo(client:MongoClient,params:any)
 
     let projection = { projection: { prevSeasons: 1,  lastWeek: 1} }; 
     
-    let info_data:any = await matchups_collection.find({}, projection).toArray();
+    let info_data = await matchups_collection.find({}, projection).toArray();
     
     info_data[0]['prevSeasons'].push(2023);
 
