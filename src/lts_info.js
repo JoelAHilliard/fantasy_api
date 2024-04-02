@@ -10,7 +10,13 @@ async function getInfo(client,params)
     }
     console.log('/info | league_id:' + params.league_id)
 
-    let dbname = String(LEAGUEID) + '_fantasy_league_prod'
+    let dbname;
+    if(LEAGUEID == 21659001){
+        dbname = String(LEAGUEID) + '_fantasy_league_prod_scrubbed'
+    }
+    else {
+        dbname = String(LEAGUEID) + '_fantasy_league_prod'
+    }
    
     
     let leagueKey = "league_" + String(LEAGUEID);

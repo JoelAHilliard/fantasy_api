@@ -62,8 +62,13 @@ async function getTeams(client,params)
     {
         return cached_team_data["league_"+String(LEAGUEID)+String(YEAR)]
     }
-    
-    let dbname = String(LEAGUEID) + '_fantasy_league_prod'
+    let dbname;
+    if(LEAGUEID == 21659001){
+        dbname = String(LEAGUEID) + '_fantasy_league_prod_scrubbed'
+    }
+    else {
+        dbname = String(LEAGUEID) + '_fantasy_league_prod'
+    }
 
     const database = client.db(dbname);
             

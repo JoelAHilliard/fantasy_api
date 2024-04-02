@@ -124,7 +124,13 @@ export async function getLTS(client,refresh,params)
     {
         return league_data["league_"+String(LEAGUEID)+"_"+String(WEEK)];
     }
-    let dbname = String(LEAGUEID) + '_fantasy_league_prod'
+    let dbname;
+    if(LEAGUEID == 21659001){
+        dbname = String(LEAGUEID) + '_fantasy_league_prod_scrubbed'
+    }
+    else {
+        dbname = String(LEAGUEID) + '_fantasy_league_prod'
+    }
 
     const database = client.db(dbname);
             
